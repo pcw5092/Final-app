@@ -1,21 +1,13 @@
 package org.edupoll.model.dto.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
 public class ErrorResponse {
-	String massage;
-	Long timestamp;
-
-	public ErrorResponse(String massage, Long timestamp) {
-		super();
-		this.massage = massage;
-		this.timestamp = timestamp;
-	}
-
-	public String getMassage() {
-		return massage;
-	}
-
-	public Long getTimestamp() {
-		return timestamp;
-	}
+	private int code;
+	private String message;
+	private Long timestamp;
 
 }

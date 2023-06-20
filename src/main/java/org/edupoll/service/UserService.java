@@ -70,7 +70,9 @@ public class UserService {
 		}
 
 	}
-
+	
+	
+	// 인증코드 처리 서비스
 	@Transactional
 	public void verfiySpecificCode(@Valid VerifyCodeRequest req) throws VerifyCodeException {
 		Optional<VerificationCode> result = verificationCodeRepository
@@ -86,7 +88,7 @@ public class UserService {
 		if (found.getCode().equals(req.getCode())) {
 			throw new VerifyCodeException();
 		}
-		found.setState("passed");
+		found.setState("");
 
 		verificationCodeRepository.save(found);
 	}

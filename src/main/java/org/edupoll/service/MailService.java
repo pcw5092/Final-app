@@ -30,7 +30,7 @@ public class MailService {
 				verificationCodeRepository.findTop1ByEmailOrderByCreatedDesc(req.getEmail());
 		
 		if(found.isPresent() && found.get().getState() != null) {
-			throw new AlreadyVerifiedException();
+			throw new AlreadyVerifiedException(req.getEmail());
 		}
 		
 		

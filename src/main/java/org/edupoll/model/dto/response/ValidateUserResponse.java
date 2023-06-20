@@ -8,6 +8,6 @@ import lombok.Data;
 public class ValidateUserResponse {
 	
 	private int code;
-	private String secret;
+	private String token;
 	
 }

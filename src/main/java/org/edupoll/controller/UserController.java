@@ -13,6 +13,7 @@ import org.edupoll.model.dto.request.VerifyCodeRequest;
 import org.edupoll.model.dto.request.VerifyEmailRequest;
 import org.edupoll.model.dto.response.ValidateUserResponse;
 import org.edupoll.model.dto.response.VerifyEmailResponse;
+import org.edupoll.service.JWTService;
 import org.edupoll.service.MailService;
 import org.edupoll.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,8 @@ public class UserController {
 
 	private final MailService mailService;
 
+	private final JWTService jwtService;
+
 	@PostMapping("/join")
 	public ResponseEntity<Void> joinUserHandle(@Valid CreateUserRequest request)
 			throws ExistUserEmailException, VerifyCodeException {
@@ -52,13 +55,14 @@ public class UserController {
 			throws NotExistUserException, InvalidPasswordException {
 
 		userService.validateUser(req);
-		
+
 		// 암호화
-		var response =
-				new ValidateUserResponse(200, Base64.getEncoder().encodeToString(req.getEmail().getBytes()));
-		
-		//log.info("encoded = " + encoded);
-		
+		String token = jwtService.createToken(req.getEmail());
+
+		log.info("token = " + token);
+
+		var response = new ValidateUserResponse(200, token);
+
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
@@ -67,7 +71,7 @@ public class UserController {
 			throws AlreadyVerifiedException {
 
 		mailService.sendVerifactionCode(req);
-		
+
 		var response = new VerifyEmailResponse(200, "이메일 인증코드가 정상 발급되어있습니다");
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
