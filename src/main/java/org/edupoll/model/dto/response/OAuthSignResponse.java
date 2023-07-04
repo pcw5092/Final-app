@@ -5,9 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ValidateUserResponse {
-	// 인증성공시 보내주는 응답객체
+public class OAuthSignResponse {
 	private int code;
-	private String token;
-	private String userEmail;
+	private String oauthUri;
 }

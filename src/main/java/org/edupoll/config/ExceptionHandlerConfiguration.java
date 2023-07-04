@@ -4,6 +4,7 @@ import org.edupoll.exception.ExistUserEmailException;
 import org.edupoll.exception.InvalidPasswordException;
 import org.edupoll.exception.JWTDecodedException;
 import org.edupoll.exception.NotExistUserException;
+import org.edupoll.exception.VerifyCodeException;
 import org.edupoll.model.dto.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class ExceptionHandlerConfiguration {
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorResponse> exceptionHandle(MethodArgumentNotValidException ex) {
@@ -53,10 +54,17 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ErrorResponse> JWTexceptionHandle(Exception ex) {
 
 		ErrorResponse error = 
-				new ErrorResponse(401, "Token value is expired or damaged", System.currentTimeMillis());
+				new ErrorResponse(401, "인증코드가 만료되었거나, 손상되었습니다.", System.currentTimeMillis());
 		
 		// 권한없음 상태메시지
 		return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+	}
+	
+	@ExceptionHandler(VerifyCodeException.class)
+	public ResponseEntity<ErrorResponse> exceptionHandle(VerifyCodeException ex) {
+		ErrorResponse response = new ErrorResponse(400, ex.getMessage(), System.currentTimeMillis());
+		
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 }
 

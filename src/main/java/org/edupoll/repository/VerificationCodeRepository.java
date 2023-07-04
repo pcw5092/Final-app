@@ -8,4 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface VerificationCodeRepository extends JpaRepository<VerificationCode, Long>{
 	
 	public Optional<VerificationCode> findTop1ByEmailOrderByCreatedDesc(String email);
+	
+	public void deleteByEmail(String email);
+	
 }

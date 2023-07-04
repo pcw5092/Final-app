@@ -7,6 +7,4 @@ import lombok.Data;
 public class VerifyEmailRequest {
 	@Email
 	private String email;
-	
-	private String state;
 }

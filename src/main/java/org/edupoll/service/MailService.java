@@ -26,24 +26,23 @@ public class MailService {
 	@Transactional
 	public void sendVerifactionCode(VerifyEmailRequest req) throws AlreadyVerifiedException {
 		// 이미 인증을 통과했는지 확인
-		Optional<VerificationCode> found = 
-				verificationCodeRepository.findTop1ByEmailOrderByCreatedDesc(req.getEmail());
+		Optional<VerificationCode> found = verificationCodeRepository.findTop1ByEmailOrderByCreatedDesc(req.getEmail());
 		
 		if(found.isPresent() && found.get().getState() != null) {
-			throw new AlreadyVerifiedException(req.getEmail());
+			throw new AlreadyVerifiedException("이미 인증을 받은 코드입니다.");
 		}
 		
 		
 		// 보안코드 생성
-		int Num = (int)(Math.random()*1_000_000);
-		String code = String.format("%06d", Num);
+		int secretNum = (int)(Math.random()*1_000_000);
+		String code = String.format("%06d", secretNum);
 		
 		// 메일 생성 및 전송
 		SimpleMailMessage message = new SimpleMailMessage();
 		
 		message.setTo(req.getEmail());
-		message.setFrom("pcw6092@naver.com");
-		message.setSubject("[트위티] 인증코드를 보내드립니다.");
+		message.setFrom("no-reply@gmail.com");
+		message.setSubject("[파이날앱] 인증코드를 보내드립니다.");
 		message.setText("""
 					이메일 본인 인증 절차에 따라 인증코드를 보내드립니다.
 					
@@ -52,6 +51,7 @@ public class MailService {
 		mailsender.send(message);
 
 		// 리포지토리에 코드값 저장
+		
 		var one = new VerificationCode();
 			one.setCode(code);
 			one.setEmail(req.getEmail());
